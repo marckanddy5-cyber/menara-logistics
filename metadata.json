@@ -1,0 +1,7 @@
+{
+  "name": "Menara Logistics - Marrakech Delivery",
+  "description": "Professional delivery and logistics website for Menara Logistics, specializing in last-mile delivery and COD services in Marrakech.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
