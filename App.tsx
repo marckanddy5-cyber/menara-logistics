@@ -15,6 +15,7 @@ const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('fr');
   const [showLogin, setShowLogin] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleLanguage = () => {
     setLang(prev => {
@@ -48,7 +49,11 @@ const App: React.FC = () => {
       
       <main>
         <section id="home">
-          <Hero lang={lang} />
+          <Hero 
+            lang={lang} 
+            isLoggedIn={isLoggedIn} 
+            onOpenLogin={() => setShowLogin(true)} 
+          />
         </section>
         
         <section id="services" className="py-20 bg-gray-50">
@@ -73,7 +78,11 @@ const App: React.FC = () => {
       {showLogin && (
         <MerchantLogin 
           lang={lang} 
-          onClose={() => setShowLogin(false)} 
+          onClose={() => setShowLogin(false)}
+          onLoginSuccess={() => {
+            setIsLoggedIn(true);
+            setShowLogin(false);
+          }}
         />
       )}
 

@@ -6,9 +6,11 @@ import { GoogleGenAI } from '@google/genai';
 
 interface HeroProps {
   lang: Language;
+  isLoggedIn: boolean;
+  onOpenLogin: () => void;
 }
 
-const Hero: React.FC<HeroProps> = ({ lang }) => {
+const Hero: React.FC<HeroProps> = ({ lang, isLoggedIn, onOpenLogin }) => {
   const [trackingId, setTrackingId] = useState('');
   const [trackingInfo, setTrackingInfo] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -17,6 +19,12 @@ const Hero: React.FC<HeroProps> = ({ lang }) => {
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!trackingId.trim()) return;
+
+    // Redirect to login if not authenticated
+    if (!isLoggedIn) {
+      onOpenLogin();
+      return;
+    }
 
     setLoading(true);
     try {
@@ -72,13 +80,20 @@ const Hero: React.FC<HeroProps> = ({ lang }) => {
           </p>
 
           <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <input 
-              type="text" 
-              value={trackingId}
-              onChange={(e) => setTrackingId(e.target.value)}
-              placeholder={t.trackPlaceholder}
-              className="flex-1 px-6 py-4 md:py-6 rounded-2xl md:rounded-3xl bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-4 focus:ring-menara-orange/30 focus:bg-white/20 transition-all text-base md:text-xl font-bold"
-            />
+            <div className="flex-1 relative">
+              <input 
+                type="text" 
+                value={trackingId}
+                onChange={(e) => setTrackingId(e.target.value)}
+                placeholder={t.trackPlaceholder}
+                className="w-full px-6 py-4 md:py-6 rounded-2xl md:rounded-3xl bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-4 focus:ring-menara-orange/30 focus:bg-white/20 transition-all text-base md:text-xl font-bold"
+              />
+              {!isLoggedIn && trackingId.length > 0 && (
+                <div className="absolute left-6 -bottom-6 text-[10px] text-menara-orange font-black uppercase tracking-widest">
+                  {lang === 'en' ? 'Login required to track' : 'Connexion requise pour le suivi'}
+                </div>
+              )}
+            </div>
             <button 
               type="submit"
               disabled={loading}

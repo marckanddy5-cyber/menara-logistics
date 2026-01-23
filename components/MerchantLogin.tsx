@@ -1,13 +1,26 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Language } from '../types';
 
 interface MerchantLoginProps {
   lang: Language;
   onClose: () => void;
+  onLoginSuccess: () => void;
 }
 
-const MerchantLogin: React.FC<MerchantLoginProps> = ({ lang, onClose }) => {
+const MerchantLogin: React.FC<MerchantLoginProps> = ({ lang, onClose, onLoginSuccess }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    // Simulate API call delay
+    setTimeout(() => {
+      setLoading(false);
+      onLoginSuccess();
+    }, 800);
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-navy/80 backdrop-blur-sm">
       <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden relative">
@@ -31,18 +44,18 @@ const MerchantLogin: React.FC<MerchantLoginProps> = ({ lang, onClose }) => {
              </p>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-bold text-navy mb-2">
                 {lang === 'en' ? 'Email' : 'Email'}
               </label>
-              <input type="email" placeholder="merchant@store.com" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-menara-orange outline-none" />
+              <input type="email" required placeholder="merchant@store.com" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-menara-orange outline-none" />
             </div>
             <div>
               <label className="block text-sm font-bold text-navy mb-2">
                 {lang === 'en' ? 'Password' : 'Mot de passe'}
               </label>
-              <input type="password" placeholder="••••••••" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-menara-orange outline-none" />
+              <input type="password" required placeholder="••••••••" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-menara-orange outline-none" />
             </div>
             <div className="flex items-center justify-between text-sm">
                <label className="flex items-center gap-2">
@@ -51,8 +64,12 @@ const MerchantLogin: React.FC<MerchantLoginProps> = ({ lang, onClose }) => {
                </label>
                <a href="#" className="text-menara-orange font-bold">{lang === 'en' ? 'Forgot?' : 'Oublié ?'}</a>
             </div>
-            <button className="w-full bg-navy text-white py-4 rounded-xl font-bold text-lg hover:bg-black transition-all shadow-lg mt-6">
-              {lang === 'en' ? 'Login' : 'Se connecter'}
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full bg-navy text-white py-4 rounded-xl font-bold text-lg hover:bg-black transition-all shadow-lg mt-6 disabled:opacity-50"
+            >
+              {loading ? '...' : (lang === 'en' ? 'Login' : 'Se connecter')}
             </button>
           </form>
 
