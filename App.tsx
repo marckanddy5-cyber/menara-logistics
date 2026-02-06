@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import MerchantLogin from './components/MerchantLogin';
 import AdminDashboard from './components/AdminDashboard';
 import { Language } from './types';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('fr');
@@ -41,6 +42,7 @@ const App: React.FC = () => {
       className={`min-h-screen bg-white ${lang === 'ar' ? 'font-[Cairo,Inter,sans-serif]' : ''}`}
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
     >
+      <SpeedInsights />
       <Header 
         lang={lang} 
         onToggleLang={toggleLanguage} 
